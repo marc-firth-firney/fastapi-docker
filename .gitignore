@@ -11,7 +11,7 @@ db/postgres/data
 
 # keys and env variables
 storage/*.key
-.env
+**.env
 
 # Gitkeep - must be last item in file
 !/**/.gitkeep
