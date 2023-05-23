@@ -1,0 +1,122 @@
+version: "3.7"
+
+services:
+
+  fastapi-order:
+    container_name: fastapi-order
+    hostname: fastapi-order
+    build:
+      context: ./
+      target: fastapi-order
+    restart: unless-stopped
+    working_dir: /usr/src/app
+    volumes:
+      - ./src/fastapi-order-service/app:/usr/src/app
+      # - ./storage:/mnt/fastapi-docker/storage
+      - ./src/fastapi-order-service/entrypoint.sh:/usr/src/entrypoint.sh
+      - ./db/postgres/models:/usr/src/models
+    env_file:
+      - ./src/fastapi-order-service/fastapi-order-service.env
+    environment:
+      - PYTHONPATH=/usr/src
+    ports:
+      - 8001:8000
+    expose:
+      - 8000
+    networks:
+      - shared-db
+      - default
+
+  fastapi-fulfilment:
+    container_name: fastapi-fulfilment
+    hostname: fastapi-fulfilment
+    build:
+      context: ./
+      target: fastapi-fulfilment
+    restart: unless-stopped
+    working_dir: /usr/src/app
+    volumes:
+      - ./src/fastapi-fulfilment-service/app:/usr/src/app
+      # - ./storage:/mnt/fastapi-docker/storage
+      - ./src/fastapi-fulfilment-service/entrypoint.sh:/usr/src/entrypoint.sh
+      - ./db/postgres/models:/usr/src/models
+    env_file:
+      - ./src/fastapi-fulfilment-service/fastapi-fulfilment-service.env
+    environment:
+      - PYTHONPATH=/usr/src
+    ports:
+      - 8002:8000
+    expose:
+      - 8000
+    networks:
+      - shared-db
+      - default
+
+  nginx:
+    hostname: nginx
+    container_name: nginx
+    build:
+      context: ./
+      target: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+    restart: unless-stopped
+    networks:
+      - default
+
+  postgres-db:
+    hostname: postgres-db
+    container_name: postgres-db
+    build:
+      context: ./
+      target: postgres
+    env_file:
+      - ./db/postgres/db.env
+    ports:
+      - "5433:5432"
+    expose:
+      - 5432
+    restart: unless-stopped
+    volumes:
+      # - ./db/postgres/data:/var/lib/postgresql/data
+      - ./db/postgres/files:/mnt/db/
+    networks:
+      - shared-db
+
+  redis-cache:
+    hostname: redis-cache
+    container_name: redis-cache
+    build:
+      context: ./
+      target: redis
+    env_file:
+      - ./db/redis/redis.env
+    restart: unless-stopped
+    volumes:
+      - "./db/redis/redis.conf:/usr/local/etc/redis/redis.conf"
+    networks:
+      - shared-db
+
+  rabbitmq-queue:
+    hostname: rabbitmq-queue
+    container_name: rabbitmq-queue
+    build:
+      context: ./
+      target: rabbitmq
+    env_file:
+      - ./db/rabbitmq/rabbitmq.env
+    ports:
+      - "8080:15672"
+    restart: unless-stopped
+    networks:
+      - shared-db
+
+networks:
+  default:
+    name: app
+    driver: bridge
+  shared-db:
+    name: shared-db
+    external: true

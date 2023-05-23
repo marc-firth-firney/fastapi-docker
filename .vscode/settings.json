@@ -1,0 +1,6 @@
+{
+  "python.analysis.extraPaths": [
+    "./db/postgres",
+    "./src/fastapi-fulfilment-service"
+  ]
+}

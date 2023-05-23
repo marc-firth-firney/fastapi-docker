@@ -1,0 +1,16 @@
+/vendor/
+node_modules/
+npm-debug.log
+yarn-error.log
+/storage/*
+db_data/
+backups/
+.editorconfig
+.DS_Store
+
+# keys and env variables
+storage/*.key
+.env
+
+# Gitkeep - must be last item in file
+!/**/.gitkeep
