@@ -14,6 +14,7 @@ Returns:
     None
 '''
 async def init_db(app: FastAPI) -> None:
+    """ Initialize the database """
     log.info("Registering tortoise...")
     register_tortoise(
         app,

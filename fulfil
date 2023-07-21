@@ -1,1 +1,1 @@
-docker-compose run --rm fastapi-fulfilment $@
+docker-compose run --rm click-fulfilment $@
