@@ -81,7 +81,6 @@ def process():
         # asyncio.run(ship_order(json_body['id']))
         loop = asyncio.get_event_loop()
         loop.run_until_complete(ship_order(json_body['id']))
-        loop.close()
 
         print(f" [x] Closing the order #{json_body['id']}")
         ch.basic_ack(delivery_tag=method.delivery_tag)
