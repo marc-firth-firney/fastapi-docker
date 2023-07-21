@@ -27,21 +27,20 @@ services:
       - shared-db
       - default
 
-  fastapi-fulfilment:
-    container_name: fastapi-fulfilment
-    hostname: fastapi-fulfilment
+  click-fulfilment:
+    container_name: click-fulfilment
+    hostname: click-fulfilment
     build:
       context: ./
-      target: fastapi-fulfilment
+      target: click-fulfilment
     restart: unless-stopped
     working_dir: /usr/src/app
     volumes:
-      - ./src/fastapi-fulfilment-service/app:/usr/src/app
-      # - ./storage:/mnt/fastapi-docker/storage
-      - ./src/fastapi-fulfilment-service/entrypoint.sh:/usr/src/entrypoint.sh
+      - ./src/click-fulfilment-service/app:/usr/src/app
+      - ./src/click-fulfilment-service/entrypoint.sh:/usr/src/entrypoint.sh
       - ./db/postgres/models:/usr/src/models
     env_file:
-      - ./src/fastapi-fulfilment-service/fastapi-fulfilment-service.env
+      - ./src/click-fulfilment-service/click-fulfilment-service.env
     environment:
       - PYTHONPATH=/usr/src
     ports:

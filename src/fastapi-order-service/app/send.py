@@ -72,6 +72,7 @@ class RabbitMQQueueSystem(QueueSystemInterface):
 
 class QueueService():
     async def sendMessage(self, message = None) -> None:
+        """Send a message to the queue"""
         q = RabbitMQQueueSystem()
         q.connect().setTopic('orders')
         q.send(message)

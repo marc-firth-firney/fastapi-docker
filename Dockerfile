@@ -26,10 +26,10 @@ ENTRYPOINT ["/usr/src/entrypoint.sh"]
 ## 
 ## Fast API Fulfilment (Python)
 ## 
-FROM --platform=linux/amd64 python as fastapi-fulfilment
-COPY ./src/fastapi-fulfilment-service/requirements.txt .
+FROM --platform=linux/amd64 python as click-fulfilment
+COPY ./src/click-fulfilment-service/requirements.txt .
 RUN pip install -r requirements.txt
-COPY ./src/fastapi-fulfilment-service/entrypoint.sh /usr/src/entrypoint.sh
+COPY ./src/click-fulfilment-service/entrypoint.sh /usr/src/entrypoint.sh
 RUN chmod +x /usr/src/entrypoint.sh
 ENTRYPOINT ["/usr/src/entrypoint.sh"]
 
