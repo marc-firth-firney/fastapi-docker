@@ -20,12 +20,14 @@ services:
     environment:
       - PYTHONPATH=/usr/src
     ports:
-      - 8001:8000
-    expose:
       - 8000
-    networks:
-      - shared-db
-      - default
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+      redis-cache:
+        condition: service_healthy
+      rabbitmq-queue:
+        condition: service_healthy
 
   click-fulfilment:
     container_name: click-fulfilment
@@ -44,12 +46,14 @@ services:
     environment:
       - PYTHONPATH=/usr/src
     ports:
-      - 8002:8000
-    expose:
       - 8000
-    networks:
-      - shared-db
-      - default
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+      redis-cache:
+        condition: service_healthy
+      rabbitmq-queue:
+        condition: service_healthy
 
   nginx:
     hostname: nginx
@@ -62,60 +66,57 @@ services:
     volumes:
       - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
     restart: unless-stopped
-    networks:
-      - default
+    depends_on:
+      - fastapi-order
+      - click-fulfilment
 
   postgres-db:
     hostname: postgres-db
     container_name: postgres-db
-    build:
-      context: ./
-      target: postgres
+    image: postgres:14-alpine
     env_file:
       - ./db/postgres/db.env
     ports:
-      - "5433:5432"
-    expose:
-      - 5432
+      - "5432:5432"
     restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "localhost", "5432" ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
     volumes:
-      # - ./db/postgres/data:/var/lib/postgresql/data
+      - ./db/postgres/data:/var/lib/postgresql/data
       - ./db/postgres/files:/mnt/db/
-    networks:
-      - shared-db
+      - ./db/postgres/init.dev.sql:/docker-entrypoint-initdb.d/init.dev.sql
 
   redis-cache:
     hostname: redis-cache
     container_name: redis-cache
-    build:
-      context: ./
-      target: redis
+    image: redis:5-alpine
     env_file:
       - ./db/redis/redis.env
+    expose:
+      - 6379
     restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "localhost", "6379" ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
     volumes:
       - "./db/redis/redis.conf:/usr/local/etc/redis/redis.conf"
-    networks:
-      - shared-db
 
   rabbitmq-queue:
     hostname: rabbitmq-queue
     container_name: rabbitmq-queue
-    build:
-      context: ./
-      target: rabbitmq
+    image: rabbitmq:3.11.13-management-alpine
     env_file:
       - ./db/rabbitmq/rabbitmq.env
-    ports:
-      - "8080:15672"
+    expose:
+      - "5672"
     restart: unless-stopped
-    networks:
-      - shared-db
-
-networks:
-  default:
-    name: app
-    driver: bridge
-  shared-db:
-    name: shared-db
-    external: true
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "localhost", "5672" ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
