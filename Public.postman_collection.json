@@ -4,84 +4,9 @@
 		"name": "Public",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "20376310",
-		"_collection_link": "https://firney.postman.co/workspace/FastAPI-Docker~9c39c5c7-49cd-43ca-ad2a-6d19d0a317b6/collection/20376310-635c1e5b-4153-4b2e-ac93-053a86751faa?action=share&creator=20376310&source=collection_link"
+		"_collection_link": "https://www.postman.com/firney/workspace/fastapi-docker/collection/20376310-635c1e5b-4153-4b2e-ac93-053a86751faa?action=share&creator=20376310&source=collection_link"
 	},
 	"item": [
-		{
-			"name": "Orders",
-			"item": [
-				{
-					"name": "List All Orders",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": []
-						},
-						"url": {
-							"raw": "{{hostname}}/api/orders/all",
-							"host": [
-								"{{hostname}}"
-							],
-							"path": [
-								"api",
-								"orders",
-								"all"
-							],
-							"query": [
-								{
-									"key": "product_id",
-									"value": "1",
-									"disabled": true
-								},
-								{
-									"key": "product_quantity",
-									"value": "3",
-									"disabled": true
-								},
-								{
-									"key": "user_id",
-									"value": "1",
-									"disabled": true
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Place Order",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"product_id\": 1,\n    \"product_quantity\": 4,\n    \"user_id\": 1\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{hostname}}/api/orders",
-							"host": [
-								"{{hostname}}"
-							],
-							"path": [
-								"api",
-								"orders"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
 		{
 			"name": "Seeder",
 			"item": [
@@ -132,6 +57,81 @@
 							"path": [
 								"api",
 								"products",
+								"all"
+							],
+							"query": [
+								{
+									"key": "product_id",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "product_quantity",
+									"value": "3",
+									"disabled": true
+								},
+								{
+									"key": "user_id",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Orders",
+			"item": [
+				{
+					"name": "Place Order",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"product_id\": 1,\n    \"product_quantity\": 4,\n    \"user_id\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{hostname}}/api/orders",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"api",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All Orders",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{hostname}}/api/orders/all",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"api",
+								"orders",
 								"all"
 							],
 							"query": [
