@@ -16,9 +16,11 @@ RUN export PYTHONPATH="$PYTHONPATH:..:/usr/src"
 ## Fast API Order (Python)
 ## 
 FROM python as fastapi-order
+WORKDIR /usr/src/app
 COPY ./src/fastapi-order-service/requirements.txt .
 RUN pip install -r requirements.txt
 COPY ./src/fastapi-order-service/app /usr/src/app
+COPY ./db/postgres/models /usr/src/models
 COPY ./src/fastapi-order-service/entrypoint.sh /usr/src/entrypoint.sh
 RUN chmod +x /usr/src/entrypoint.sh
 ENTRYPOINT ["/usr/src/entrypoint.sh"]
@@ -27,9 +29,11 @@ ENTRYPOINT ["/usr/src/entrypoint.sh"]
 ## Fast API Fulfilment (Python)
 ## 
 FROM python as click-fulfilment
+WORKDIR /usr/src/app
 COPY ./src/click-fulfilment-service/requirements.txt .
 RUN pip install -r requirements.txt
 COPY ./src/click-fulfilment-service/app /usr/src/app
+COPY ./db/postgres/models /usr/src/models
 COPY ./src/click-fulfilment-service/entrypoint.sh /usr/src/entrypoint.sh
 RUN chmod +x /usr/src/entrypoint.sh
 ENTRYPOINT ["/usr/src/entrypoint.sh"]
