@@ -42,8 +42,8 @@ class RabbitMQQueueSystem(QueueSystemInterface):
         )
 
         parameters = pika.ConnectionParameters(
-            host = 'rabbitmq-queue', 
-            port = 5672,
+            host = os.environ.get("RABBITMQ_DEFAULT_HOST"), 
+            port = os.environ.get("RABBITMQ_DEFAULT_PORT"),
             virtual_host = '/',
             credentials = credentials
         )
