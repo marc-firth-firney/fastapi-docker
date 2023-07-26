@@ -18,7 +18,7 @@ Args:
 Returns:
     JSON response
 '''
-@router.post(path = "/", status_code = status.HTTP_201_CREATED)
+@router.get(path = "/", status_code = status.HTTP_201_CREATED)
 async def seed():
     
     log.info("Seeding database")
