@@ -23,7 +23,7 @@ Args:
     status_code: The expected HTTP status code for the response
 
 Returns:
-    a list of orders
+    a success response
 '''
 @router.get(
     path = "/check", 
