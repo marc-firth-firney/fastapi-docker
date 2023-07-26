@@ -1,6 +1,6 @@
 import logging
 from fastapi import FastAPI
-from app.routers import orders, products, seeder
+from app.routers import orders, products, seeder, health
 from app.db import init_db
 
 # Set up logging
@@ -15,6 +15,7 @@ app = FastAPI(
 app.include_router(orders.router,tags=["order"])
 app.include_router(products.router,tags=["product"])
 app.include_router(seeder.router,tags=["seeder"])
+app.include_router(health.router,tags=["health"])
 
 @app.on_event("startup")
 async def startup_event():

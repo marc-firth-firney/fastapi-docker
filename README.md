@@ -37,6 +37,8 @@ cp db.env.sample db.env
 # cd into the rabbitmq service and copy the env file
 cd $ROOT_DIR/db/rabbitmq/
 cp rabbitmq.env.sample rabbitmq.env
+
+cd $ROOT_DIR
 ```
 
 ## Running the solution locally

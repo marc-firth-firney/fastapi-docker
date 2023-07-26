@@ -30,7 +30,10 @@ class OrderResponseSchema(OurBaseModel):
             "created_at": self.created_at,
             "updated_at": self.updated_at
        }
-    
+
+
+class OrderHealthCheckSchema(OurBaseModel):
+    status: str
 
 class ProductPayloadSchema(OurBaseModel):
     name: str
