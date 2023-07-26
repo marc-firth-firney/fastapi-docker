@@ -8,6 +8,37 @@
 	},
 	"item": [
 		{
+			"name": "Healthcheck",
+			"item": [
+				{
+					"name": "Healthcheck",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{hostname}}/api/health/check",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"api",
+								"health",
+								"check"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Seeder",
 			"item": [
 				{
@@ -156,6 +187,33 @@
 					"response": []
 				}
 			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "hostname",
+			"value": "http://0.0.0.0:80",
+			"type": "string"
 		}
 	]
 }
