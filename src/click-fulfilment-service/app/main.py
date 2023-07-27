@@ -21,14 +21,14 @@ def process():
 
     # Set up credentials for RabbitMQ using the pika library
     credentials = pika.PlainCredentials(
-        os.environ.get("RABBITMQ_DEFAULT_USER"), 
-        os.environ.get("RABBITMQ_DEFAULT_PASS")
+        str(os.environ.get("RABBITMQ_DEFAULT_USER")), 
+        str(os.environ.get("RABBITMQ_DEFAULT_PASS"))
     )
 
     # Set up connection parameters for RabbitMQ
     parameters = pika.ConnectionParameters(
-        host = os.environ.get("RABBITMQ_DEFAULT_HOST"), 
-        port = os.environ.get("RABBITMQ_DEFAULT_PORT"),
+        host = str(os.environ.get("RABBITMQ_DEFAULT_HOST")), 
+        port = int(os.environ.get("RABBITMQ_DEFAULT_PORT")),
         virtual_host = '/',
         credentials = credentials
     )
