@@ -37,13 +37,13 @@ class RabbitMQQueueSystem(QueueSystemInterface):
     def connect(self) -> object:
         """Connect to the queue system"""
         credentials = pika.PlainCredentials(
-            os.environ.get("RABBITMQ_DEFAULT_USER"), 
-            os.environ.get("RABBITMQ_DEFAULT_PASS")
+            str(os.environ.get("RABBITMQ_DEFAULT_USER")), 
+            str(os.environ.get("RABBITMQ_DEFAULT_PASS"))
         )
 
         parameters = pika.ConnectionParameters(
-            host = os.environ.get("RABBITMQ_DEFAULT_HOST"), 
-            port = os.environ.get("RABBITMQ_DEFAULT_PORT"),
+            host = str(os.environ.get("RABBITMQ_DEFAULT_HOST")), 
+            port = int(os.environ.get("RABBITMQ_DEFAULT_PORT")),
             virtual_host = '/',
             credentials = credentials
         )
