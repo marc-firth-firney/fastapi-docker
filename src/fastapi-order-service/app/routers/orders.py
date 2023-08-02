@@ -56,13 +56,9 @@ async def create_order(payload: OrderPayloadSchema) -> OrderResponseSchema:
     if not added_order:
         raise HTTPException(status_code=500, detail="Order could not be created!")
     
+    # Queue the unfulfilled orders (including any old ones that didn't previously get shipped)
     unfulfilled_orders = await Order.filter(Q(shipped=False))
-
-    print("unfulfilled_orders")
-    print(unfulfilled_orders)
-
     rs = RelayService()
-
     await rs.queue(unfulfilled_orders)
 
     return added_order
