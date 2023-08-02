@@ -1,5 +1,6 @@
 import logging
 from fastapi import APIRouter, status, HTTPException
+from app.relay import RelayService
 from app.schemas.pydantic import OrderPayloadSchema, OrderResponseSchema
 import sys
 sys.path.insert(0, '..')
@@ -9,6 +10,9 @@ from models.product import Product
 from app.send import QueueService
 import json
 from tortoise.contrib.pydantic import pydantic_queryset_creator
+from tortoise import Tortoise, fields, run_async
+from tortoise.expressions import Q
+from tortoise.models import Model
 
 
 router = APIRouter(prefix="/api/orders")
@@ -44,22 +48,24 @@ async def create_order(payload: OrderPayloadSchema) -> OrderResponseSchema:
     if not product:
         raise HTTPException(status_code=404, detail="Product not found!")
 
-    order: OrderResponseSchema = await Order.create(
+    added_order: OrderResponseSchema = await Order.create(
         product=product,
         product_quantity=payload.product_quantity,
         user=user)
     
-    if not order:
+    if not added_order:
         raise HTTPException(status_code=500, detail="Order could not be created!")
     
-    orders_dict = json.dumps(dict(order), indent=4, sort_keys=False, default=str)
+    unfulfilled_orders = await Order.filter(Q(shipped=False))
 
-    log.info("ORDER placed: " + orders_dict)
+    print("unfulfilled_orders")
+    print(unfulfilled_orders)
 
-    queue_service = QueueService()
-    await queue_service.sendMessage(orders_dict)
+    rs = RelayService()
 
-    return order
+    await rs.queue(unfulfilled_orders)
+
+    return added_order
 
 
 ''' 
