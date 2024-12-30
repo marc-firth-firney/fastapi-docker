@@ -2,5 +2,9 @@
   "python.analysis.extraPaths": [
     "./db/postgres",
     "./src/fastapi-fulfilment-service"
-  ]
+  ],
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.autopep8"
+  },
+  "python.formatting.provider": "none"
 }

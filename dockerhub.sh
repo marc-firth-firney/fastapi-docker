@@ -6,7 +6,7 @@ set -o errexit
 HASH=$(git rev-parse --verify HEAD)
 
 # specify project name for image tagging
-PROJECTNAME="fastapi-workshop"
+PROJECTNAME="hammerson-tenant-data-service-fastapi"
 
 # specify docker hub org name
 ORGNAME="firneygroup"
@@ -15,7 +15,7 @@ ORGNAME="firneygroup"
 buildVar=( )
 
 # list of containers in multistage build
-declare -a arr=("fastapi-order" "click-fulfilment")
+declare -a arr=("tenant-api")
 
 # loop through containers, build and tag
 for i in "${arr[@]}"

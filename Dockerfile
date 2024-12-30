@@ -1,41 +1,29 @@
 ## 
 ## Python Base Image
 ## 
-FROM python:3.9.6-alpine as python
+FROM python:3.9.21-alpine as python
 WORKDIR /usr/src/app
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 RUN set -ex \
-	  && apk add --update --no-cache netcat-openbsd build-base postgresql
+	&& apk add --update --no-cache netcat-openbsd build-base
 RUN pip install --upgrade pip setuptools wheel
-COPY ./db/postgres/models /usr/src/models
 COPY ./src/__init__.py /usr/src/__init__.py
-RUN export PYTHONPATH="$PYTHONPATH:..:/usr/src"
+RUN export PYTHONPATH="$PYTHONPATH:..:/usr/src:/usr/src/app:/usr/src/app/services"
 
 ## 
-## Fast API Order (Python)
+## Tenant API (Python)
 ## 
-FROM python as fastapi-order
+FROM python as tenant-api
 WORKDIR /usr/src/app
-COPY ./src/fastapi-order-service/requirements.txt .
+COPY ./src/requirements.txt .
+COPY ./src/behave.ini ~/
 RUN pip install -r requirements.txt
-COPY ./src/fastapi-order-service/app /usr/src/app
-COPY ./db/postgres/models /usr/src/models
-COPY ./src/fastapi-order-service/entrypoint.sh /usr/src/entrypoint.sh
+COPY ./src/app /usr/src/app
+COPY ./src/entrypoint.sh /usr/src/entrypoint.sh
 RUN chmod +x /usr/src/entrypoint.sh
-ENTRYPOINT ["/usr/src/entrypoint.sh"]
-
-## 
-## Fast API Fulfilment (Python)
-## 
-FROM python as click-fulfilment
-WORKDIR /usr/src/app
-COPY ./src/click-fulfilment-service/requirements.txt .
-RUN pip install -r requirements.txt
-COPY ./src/click-fulfilment-service/app /usr/src/app
-COPY ./db/postgres/models /usr/src/models
-COPY ./src/click-fulfilment-service/entrypoint.sh /usr/src/entrypoint.sh
-RUN chmod +x /usr/src/entrypoint.sh
+RUN alias ll='ls -lah --color=auto'
+RUN export PYTHONPATH="$PYTHONPATH:..:/usr/src:/usr/src/app:/usr/src/app/services"
 ENTRYPOINT ["/usr/src/entrypoint.sh"]
 
 
@@ -48,13 +36,3 @@ COPY nginx/nginx-entrypoint.sh /usr/local/bin/nginx-entrypoint.sh
 RUN chmod +x /usr/local/bin/nginx-entrypoint*
 ENTRYPOINT ["/usr/local/bin/nginx-entrypoint.sh"]
 CMD ["nginx", "-g", "daemon off;"]
-
-##
-## PubSub
-##
-# FROM gcr.io/google.com/cloudsdktool/google-cloud-cli:alpine
-# RUN apk --update add openjdk7-jre
-# RUN gcloud components install app-engine-java kubectl
-# gcloud beta emulators pubsub start --project=myproject
-# gcloud beta emulators pubsub topics create orders
-# gcloud beta emulators pubsub subscriptions create fulfilment-sub --topic=orders

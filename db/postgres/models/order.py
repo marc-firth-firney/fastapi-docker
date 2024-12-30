@@ -20,6 +20,24 @@ class Order(models.Model):
     def __str__(self):
         return self.id
     
+    async def createFromPayload(self, payload):
+        user = await User.get_or_none(id=payload.user_id)
+    
+        if not user:
+            raise Exception("User not found!")
+        
+        product = await Product.get_or_none(id=payload.product_id)
+    
+        if not product:
+            raise Exception(status_code=404, detail="Product not found!")
+
+        added_order = await self.create(
+            product=product,
+            product_quantity=payload.product_quantity,
+            user=user)
+        
+        return added_order
+    
     class Meta:
         table="orders"
 
