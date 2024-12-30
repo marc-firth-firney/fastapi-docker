@@ -15,3 +15,5 @@ storage/*.key
 
 # Gitkeep - must be last item in file
 !/**/.gitkeep
+
+typesense/data/**
